@@ -25,7 +25,7 @@ public class UserTests extends FilmorateApplicationTests {
     }
 
     @BeforeEach
-    void BeforeEach() {
+    void beforeEach() {
         user1 = User.builder()
                 .email("LTC@yandex.ru")
                 .login("Nagibator")
