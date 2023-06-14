@@ -39,7 +39,7 @@ public class UserServiceImplements implements UserService {
             return user;
         } else {
             log.error("ID введен неверно! Такого пользователя нет в базе даных");
-            throw new ValidationException("Такого пользователя нет");
+            throw new ValidationException("Пользователя с таким айди не существует.");
         }
     }
 
@@ -63,14 +63,14 @@ public class UserServiceImplements implements UserService {
         }
         if (user.getLogin().contains(" ")) {
             log.error("поле Login не может содержать пробелы");
-            throw new ValidationException("логин не может содержать пробелы.");
+            throw new ValidationException("логин не может содержать пробелы");
         }
         if (user.getName() == null || user.getName().isEmpty() || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
         if (user.getBirthday().isAfter(LocalDate.now())) {
             log.error("поле Birthday не может быть в будущем времени");
-            throw new ValidationException("дата рождения не может быть в будущем.");
+            throw new ValidationException("дата рождения не может быть указана в будущем времени");
         }
     }
 }

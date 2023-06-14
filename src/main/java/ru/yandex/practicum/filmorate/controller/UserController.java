@@ -28,6 +28,8 @@ public class UserController {    //класс обслуживающий юзе�
     }
 
     @GetMapping
-    public List<User> getUsers() { return userService.getAllUsers(); }
+    public List<User> getUsers() {
+        return userService.getAllUsers();
+    }
 
 }

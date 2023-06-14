@@ -20,11 +20,13 @@ public class FilmController {    //класс обслуживающий фил�
         log.info("фильм добавлен: {}", film);
         return filmService.addFilm(film);
     }
+
     @PutMapping
-    public Film updateFilm (@RequestBody Film film) {
+    public Film updateFilm(@RequestBody Film film) {
         log.info("фильм обновлен: {}", film);
         return filmService.updateFilm(film);
     }
+
     @GetMapping
     public List<Film> getFilms() {
         return filmService.getAlFilms();
