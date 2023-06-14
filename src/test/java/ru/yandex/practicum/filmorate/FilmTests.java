@@ -26,7 +26,7 @@ public class FilmTests extends FilmorateApplicationTests {
     }
 
     @BeforeEach
-    void BeforeEach() {
+    void beforeEach() {
         film1 = Film.builder()
                 .name("Хищник 2")
                 .description("фантастический боевик")
