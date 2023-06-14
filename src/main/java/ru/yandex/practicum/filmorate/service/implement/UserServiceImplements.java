@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service    //класс бизнесс-логики добавления,обновления,получения пользователей! +валидация
+@Slf4j
 public class UserServiceImplements implements UserService {
 
     private static int id;
@@ -37,8 +38,8 @@ public class UserServiceImplements implements UserService {
             users.put(user.getId(), user);
             return user;
         } else {
-            //log.error("ERROR: ID введен неверно - такого пользователя не существует!");
-            throw new ValidationException("Такого пользователя нет.");
+            log.error("ID введен неверно! Такого пользователя нет в базе даных");
+            throw new ValidationException("Такого пользователя нет");
         }
     }
 
@@ -49,26 +50,26 @@ public class UserServiceImplements implements UserService {
 
     private void validateUser(User user) {
         if (user.getEmail() == null || user.getEmail().isEmpty()) {
-            //log.error("ERROR: Поле Email не может быть пустым!");
+            log.error("Поле Email не заполнена");
             throw new ValidationException("электронная почта не может быть пустой.");
         }
         if (!user.getEmail().contains("@")) {
-            //log.error("ERROR: Поле Email должно содержать символ @");
+            log.error("в поле Email должен содержаться символ @");
             throw new ValidationException("электронная почта должна содержать символ @");
         }
         if (user.getLogin() == null || user.getLogin().isEmpty()) {
-            //log.error("ERROR: Поле Login не может быть пустым!");
+            log.error("поле Login не заполнено");
             throw new ValidationException("логин не может быть пустым.");
         }
         if (user.getLogin().contains(" ")) {
-            //log.error("ERROR: Поле Login не может содержать пробелы!");
+            log.error("поле Login не может содержать пробелы");
             throw new ValidationException("логин не может содержать пробелы.");
         }
         if (user.getName() == null || user.getName().isEmpty() || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
         if (user.getBirthday().isAfter(LocalDate.now())) {
-            //log.error("ERROR: Поле Birthday не может быть в будущем!");
+            log.error("поле Birthday не может быть в будущем времени");
             throw new ValidationException("дата рождения не может быть в будущем.");
         }
     }
