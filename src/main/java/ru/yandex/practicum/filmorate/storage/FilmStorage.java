@@ -5,16 +5,16 @@ import ru.yandex.practicum.filmorate.model.Film;
 import java.util.List;
 import java.util.Set;
 
-public interface FilmStorage { //хранилище данных о фильмах
-    Film addFilm(Film film);
+public interface FilmStorage {
+    Film save(Film film);
+
+    Film findFilmById(int id);
 
     List<Film> getFilmList();
 
     Set<Integer> getAllId();
 
+    Film addFilm(Film film);
+
     void deleteAllFilms();
-
-    Film save(Film film);
-
-    Film findFilmById(int id);
 }

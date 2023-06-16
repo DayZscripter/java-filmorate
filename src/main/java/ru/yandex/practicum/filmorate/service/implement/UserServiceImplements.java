@@ -22,7 +22,6 @@ public class UserServiceImplements implements UserService { //класс биз�
     @Autowired
     public UserServiceImplements(UserStorage userStorage) {
         this.userStorage = userStorage;
-
     }
 
     @Override
@@ -42,7 +41,6 @@ public class UserServiceImplements implements UserService { //класс биз�
             log.error("id введен неверно или такого пользователя не существует");
             throw new ObjectNotFoundException("пользователя с таким id не существует.");
         }
-
     }
 
     @Override

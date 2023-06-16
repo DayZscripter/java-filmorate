@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.storage.implement;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
@@ -15,27 +15,33 @@ public class InMemoryFilmStorage implements FilmStorage {
     private static int id;
 
     @Override
+    public Film save(Film film) {
+        return films.put(film.getId(), film);
+    }
+
+    @Override
     public Film addFilm(Film film) {
         film.setId(generateFilmId());
         return films.put(film.getId(), film);
     }
 
     @Override
-    public Film save(Film film) {
-        return films.put(film.getId(), film);
-    }
-
-    @Override
     public Film findFilmById(int id) {
         if (!films.containsKey(id)) {
-            log.error("Такого фильма нет в базе или id фильма введен неверно");
-            throw new ValidationException("id фильма не найден");
+            log.error("id введен неверно или такого фильма не существует");
+            throw new ObjectNotFoundException(String.format("не найден фильм с id %d", id));
         }
         return films.get(id);
     }
 
     @Override
+    public void deleteAllFilms() {
+        films.clear();
+    }
+
+    @Override
     public List<Film> getFilmList() {
+        log.debug("найдены все фильмы");
         return new ArrayList<>(films.values());
     }
 
@@ -45,10 +51,5 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     public Set<Integer> getAllId() {
         return films.keySet();
-    }
-
-    @Override
-    public void deleteAllFilms() {
-        films.clear();
     }
 }

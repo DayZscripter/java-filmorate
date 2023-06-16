@@ -6,15 +6,16 @@ import java.util.List;
 import java.util.Set;
 
 public interface UserStorage {
-    User addUser(User user);
+    User save(User user);
+
+    User findUserById(int id);
 
     List<User> getUserList();
 
     Set<Integer> getAllId();
 
+    User addUser(User user);
+
     void deleteAllUsers();
 
-    User save(User user);
-
-    User findUserById(int id);
 }

@@ -7,6 +7,10 @@ import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.implement.FilmServiceImplements;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.implement.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.implement.InMemoryUserStorage;
 
 import java.time.LocalDate;
 
@@ -15,17 +19,19 @@ import static org.junit.jupiter.api.Assertions.*;
 public class FilmTests extends FilmorateApplicationTests {
 
     private static FilmController filmController;
-    private static Film film3;
+    private static Film testFilm1;
 
     @BeforeAll
     public static void init() {
-        filmController = new FilmController(new FilmServiceImplements());
+        FilmStorage testFilmStorage = new InMemoryFilmStorage();
+        UserStorage testUserStorage = new InMemoryUserStorage();
+        filmController = new FilmController(new FilmServiceImplements(testFilmStorage, testUserStorage));
     }
 
     @BeforeEach
     void beforeEach() {
 
-        film3 = Film.builder()
+        testFilm1 = Film.builder()
                 .name("Хищник")
                 .description("фантастический боевик")
                 .duration(107)
@@ -35,16 +41,16 @@ public class FilmTests extends FilmorateApplicationTests {
 
     @Test
     void shouldCreateFilmTest() {
-        assertEquals(film3, filmController.addFilm(film3));
+        assertEquals(testFilm1, filmController.addFilm(testFilm1));
         assertNotNull(filmController.getFilms());
-        assertTrue(filmController.getFilms().contains(film3));
+        assertTrue(filmController.getFilms().contains(testFilm1));
     }
 
     @Test
     void shouldUpdateFilmTest() {
-        Film expected1 = film3;
+        Film expected1 = testFilm1;
         Film actual1 = filmController.addFilm(expected1);
-        actual1.setId(film3.getId());
+        actual1.setId(testFilm1.getId());
         actual1.setReleaseDate(LocalDate.of(2001, 1, 1));
         actual1.setName("Блейд");
         Film update = filmController.updateFilm(actual1);
@@ -54,21 +60,21 @@ public class FilmTests extends FilmorateApplicationTests {
 
     @Test
     void shouldThrowReleaseDateTest() {
-        film3.setReleaseDate(LocalDate.of(1893, 5, 5));
-        Exception exception = assertThrows(ValidationException.class, () -> filmController.addFilm(film3));
+        testFilm1.setReleaseDate(LocalDate.of(1893, 5, 5));
+        Exception exception = assertThrows(ValidationException.class, () -> filmController.addFilm(testFilm1));
         assertEquals("Дата релиза не может быть раньше 1895-12-28", exception.getMessage());
     }
 
     @Test
     void shouldThrowDurationNegativeTest() {
-        film3.setDuration(-13);
-        assertThrows(ValidationException.class, () -> filmController.addFilm(film3));
+        testFilm1.setDuration(-13);
+        assertThrows(ValidationException.class, () -> filmController.addFilm(testFilm1));
     }
 
     @Test
     void shouldThrowNameIsEmptyTest() {
-        film3.setName("");
-        Exception exception = assertThrows(ValidationException.class, () -> filmController.addFilm(film3));
+        testFilm1.setName("");
+        Exception exception = assertThrows(ValidationException.class, () -> filmController.addFilm(testFilm1));
         String expectedMessage = "Название не может быть пустым";
         String actualMessage = exception.getMessage();
         assertEquals(expectedMessage, actualMessage);
@@ -76,12 +82,20 @@ public class FilmTests extends FilmorateApplicationTests {
 
     @Test
     void shouldThrowDescriptionMoreThan200Test() {
-        film3.setDescription("Американский вертолет был сбит партизанами в Южной Америке. " +
+        testFilm1.setDescription("Американский вертолет был сбит партизанами в Южной Америке. " +
                 "Оставшийся в живых экипаж находится в плену. " +
                 "ЦРУ США бросает свои лучшие силы для освобождения американских граждан. " +
-                "ЦРУ США бросает свои лучшие силы для освобождения американских граждан.");
-        Exception exception = assertThrows(ValidationException.class, () -> filmController.addFilm(film3));
-        assertEquals("Максимальная длина описания — 200 символов", exception.getMessage());
+                "\n" +
+                "\n" +
+                "— Мне страшно, Пончо.\n" +
+                "\n" +
+                "— Ерунда! Нет человека, чтоб ты страшился!\n" +
+                "\n" +
+                "— Что-то там ждёт нас, и это не человек. Мы все умрём." +
+                "\n" +
+                "\n");
+        Exception exception = assertThrows(ValidationException.class, () -> filmController.addFilm(testFilm1));
+        assertEquals("Максимальная длина описания 200 символов", exception.getMessage());
     }
 
 }

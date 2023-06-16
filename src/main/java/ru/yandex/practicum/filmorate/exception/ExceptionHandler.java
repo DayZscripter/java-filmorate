@@ -17,19 +17,19 @@ public class ExceptionHandler {
 
     @org.springframework.web.bind.annotation.ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleException(final Exception x) {
-        return new ErrorResponse(String.format("общее исключение", x.getMessage()));
+    public ErrorResponse handleException(final Exception e) {
+        return new ErrorResponse(String.format("общее исключение", e.getMessage()));
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handlerObjectNotFound(final ObjectNotFoundException x) {
-        return new ErrorResponse(String.format("обьект не найден", x.getMessage()));
+    public ErrorResponse handlerObjectNotFound(final ObjectNotFoundException e) {
+        return new ErrorResponse(String.format("обьект не найден", e.getMessage()));
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handlerValidationError(final ValidationException x) {
-        return new ErrorResponse(String.format("ошибка валидации", x.getMessage()));
+    public ErrorResponse handlerValidationError(final ValidationException e) {
+        return new ErrorResponse(String.format("ошибка валидации", e.getMessage()));
     }
 }
