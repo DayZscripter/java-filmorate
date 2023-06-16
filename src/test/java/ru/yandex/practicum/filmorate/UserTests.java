@@ -16,8 +16,6 @@ public class UserTests extends FilmorateApplicationTests {
 
     private static UserController userController;
     private static User user1;
-    //private static User user2;
-    //private static User user3;
 
     @BeforeAll
     public static void init() {
@@ -32,18 +30,6 @@ public class UserTests extends FilmorateApplicationTests {
                 .name("Kolyan")
                 .birthday(LocalDate.of(1991, 12, 2))
                 .build();
-//        user2 = User.builder()
-//                .email("Pavel_Skate@gmail.com")
-//                .login("KonchiCabana")
-//                .name("Pavel")
-//                .birthday(LocalDate.of(1991, 8, 27))
-//                .build();
-//        user3 = User.builder()
-//                .email("Tita@yandex.ru")
-//                .login("NikitaTanks")
-//                .name("Nikita")
-//                .birthday(LocalDate.of(1990, 7, 3))
-//                .build();
     }
 
     @Test

@@ -15,10 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class FilmTests extends FilmorateApplicationTests {
 
     private static FilmController filmController;
-    private static Film film1;
-    private static Film film2;
     private static Film film3;
-    private static Film film4;
 
     @BeforeAll
     public static void init() {
@@ -27,32 +24,14 @@ public class FilmTests extends FilmorateApplicationTests {
 
     @BeforeEach
     void beforeEach() {
-        film1 = Film.builder()
-                .name("Хищник 2")
-                .description("фантастический боевик")
-                .duration(123)
-                .releaseDate(LocalDate.of(1990, 8, 10))
-                .build();
-        film2 = Film.builder()
-                .name("Кровавое месиво")
-                .description("ужасы")
-                .duration(120)
-                .releaseDate(LocalDate.of(1989, 1, 8))
-                .build();
+
         film3 = Film.builder()
                 .name("Хищник")
                 .description("фантастический боевик")
                 .duration(107)
                 .releaseDate(LocalDate.of(1987, 6, 13))
                 .build();
-        film4 = Film.builder()
-                .name("Блейд")
-                .description("фантастический боевик")
-                .duration(134)
-                .releaseDate(LocalDate.of(1999, 7, 3))
-                .build();
     }
-
 
     @Test
     void shouldCreateFilmTest() {
