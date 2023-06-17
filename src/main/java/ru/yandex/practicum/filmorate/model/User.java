@@ -1,7 +1,9 @@
 package ru.yandex.practicum.filmorate.model;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
@@ -10,18 +12,19 @@ import java.util.Set;
 
 @Data
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
 
-    private int id;
+    int id;
     @NotBlank
     @Email
-    private String email;
+    String email;
     @NotNull
     @Pattern(regexp = "\\S+", message = "Логин содержит пробелы")
-    private String login;
-    private String name;
+    String login;
+    String name;
     @Past
-    private LocalDate birthday;
+    LocalDate birthday;
     private final Set<Integer> friends = new HashSet<>(); //хешсет для списка друзей,(set <Integer  вместо >set <Long>)
 
     public Set<Integer> getFriends() {
