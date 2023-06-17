@@ -1,76 +1,94 @@
 package ru.yandex.practicum.filmorate.service.implement;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-@Service    //класс бизнесс-логики добавления,обновления,получения пользователей! +валидация
+import static ru.yandex.practicum.filmorate.service.implement.ValidatationService.validateUser;
+
+@Service
 @Slf4j
-public class UserServiceImplements implements UserService {
+public class UserServiceImplements implements UserService { //класс бизнес-логики получения/обновления/ списка юзеров
+    private final UserStorage userStorage;
 
-    private static int id;
-    private final Map<Integer, User> users = new HashMap<>();
-
-    private int generateUserId() {
-        return ++id;
+    @Autowired
+    public UserServiceImplements(UserStorage userStorage) {
+        this.userStorage = userStorage;
     }
 
     @Override
     public User addUser(User user) {
         validateUser(user);
-        user.setId(generateUserId());
-        users.put(user.getId(), user);
+        userStorage.addUser(user);
         return user;
     }
 
     @Override
     public User updateUser(User user) {
-        if (users.containsKey(user.getId())) {
+        if (userStorage.getAllId().contains(user.getId())) {
             validateUser(user);
-            users.put(user.getId(), user);
+            userStorage.save(user);
             return user;
         } else {
-            log.error("ID введен неверно! Такого пользователя нет в базе даных");
-            throw new ValidationException("Пользователя с таким айди не существует.");
+            log.error("id введен неверно или такого пользователя не существует");
+            throw new ObjectNotFoundException("пользователя с таким id не существует.");
         }
     }
 
     @Override
     public List<User> getAllUsers() {
-        return new ArrayList<>(users.values());
+        return userStorage.getUserList();
     }
 
-    private void validateUser(User user) {
-        if (user.getEmail() == null || user.getEmail().isEmpty()) {
-            log.error("Поле Email не заполнена");
-            throw new ValidationException("электронная почта не может быть пустой.");
-        }
-        if (!user.getEmail().contains("@")) {
-            log.error("в поле Email должен содержаться символ @");
-            throw new ValidationException("электронная почта должна содержать символ @");
-        }
-        if (user.getLogin() == null || user.getLogin().isEmpty()) {
-            log.error("поле Login не заполнено");
-            throw new ValidationException("логин не может быть пустым.");
-        }
-        if (user.getLogin().contains(" ")) {
-            log.error("поле Login не может содержать пробелы");
-            throw new ValidationException("логин не может содержать пробелы");
-        }
-        if (user.getName() == null || user.getName().isEmpty() || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
-        if (user.getBirthday().isAfter(LocalDate.now())) {
-            log.error("поле Birthday не может быть в будущем времени");
-            throw new ValidationException("дата рождения не может быть указана в будущем времени");
-        }
+    @Override
+    public List<User> getCommonFriends(int userId, int friendId) {
+        Set<Integer> users = userStorage.findUserById(userId).getFriends();
+
+        return userStorage.findUserById(friendId).getFriends().stream()
+                .filter(users::contains)
+                .map(userStorage::findUserById)
+                .collect(Collectors.toList());
     }
+
+    @Override
+    public void deleteFriendById(int userId, int friendId) {
+        User user = userStorage.findUserById(userId);
+        User friend = userStorage.findUserById(friendId);
+        user.deleteFriend(friendId);
+        friend.deleteFriend(userId);
+
+        log.debug("Total friends: {}", userStorage.findUserById(userId).getFriends().size());
+    }
+
+    @Override
+    public Integer addFriend(int userId, int friendId) {
+        User user = userStorage.findUserById(userId);
+        User friend = userStorage.findUserById(friendId);
+        user.addFriend(friendId);
+        friend.addFriend(userId);
+
+        return userStorage.findUserById(userId).getFriends().size();
+    }
+
+    @Override
+    public List<User> getListOfFriends(int id) {
+        return userStorage.findUserById(id).getFriends().stream()
+                .map(userStorage::findUserById)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public User getUserById(int id) {
+        return userStorage.findUserById(id);
+    }
+
+
 }
