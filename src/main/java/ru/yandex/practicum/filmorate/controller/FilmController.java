@@ -17,50 +17,52 @@ import java.util.List;
 public class FilmController {
     private final FilmService filmService;
 
-    @PutMapping("/{id}/like/{userId}")
-    @ResponseStatus(HttpStatus.OK)
-    public void leaveLike(@PathVariable int id, @PathVariable int userId) {    // ставим like фильму
-        log.debug("Получен PUT-запрос на добавление лайка у фильма с id: {}", id);
-        filmService.addLike(id, userId);
-    }
-
-    @GetMapping("/popular")
-    @ResponseStatus(HttpStatus.OK)
-    public List<Film> getTopFilms(@RequestParam(defaultValue = "10") int count) { //return список топ10 фильмов по like
-        log.debug("Получен GET-запрос на получение топ-10 фильмов");
-        return filmService.getTopFilms(count);
-    }
-
-    @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public Film findFilmById(@PathVariable int id) {    //
-        log.debug("Получен GET-запрос на получение фильма с id: {}.", id);
-        return filmService.findFilmById(id);
-    }
-
-    @DeleteMapping("/{id}/like/{userId}")
-    @ResponseStatus(HttpStatus.OK)
-    public void removeLike(@PathVariable int id, @PathVariable int userId) {    //удаляем лике
-        log.debug("Получен DELETE-запрос на удаление лайка у фильма с id: {}", id);
-        filmService.deleteLike(id, userId);
-    }
-
     @PostMapping
     public Film addFilm(@Valid @RequestBody Film film) {
-        log.debug("Получен POST-запрос на создание фильма: {}", film);
-        return filmService.addFilm(film);
-    }
-
-    @PutMapping
-    public Film updateFilm(@Valid @RequestBody Film film) {
-        log.debug("Получен PUT-запрос на обновление фильма: {}", film);
-        return filmService.updateFilm(film);
+        log.info("Добавлен фильм: {}", film);
+        return filmService.createFilm(film);
     }
 
     @GetMapping
     public List<Film> getFilms() {
-        log.info("Получен GET-запрос на получение всех фильмов");
         return filmService.getAllFilms();
+    }
+
+    //лайк фильму
+    @PutMapping("/{id}/like/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void setLike(@PathVariable int id, @PathVariable int userId) {
+        filmService.addLike(id, userId);
+    }
+
+    @DeleteMapping("/{id}/like/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteLike(@PathVariable int id, @PathVariable int userId) {
+        filmService.deleteLike(id, userId);
+    }
+
+    //возвращает лист топ10 фильмов по колличеству лайков
+    @GetMapping("/popular")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Film> getTopOfFilms(@RequestParam(defaultValue = "10") int count) {
+        return filmService.getTopFilms(count);
+    }
+
+    @DeleteMapping("/{id}")
+    public boolean deleteFilmById(@PathVariable int id) {
+        return filmService.deleteFilmById(id);
+    }
+
+    @PutMapping
+    public Film updateFilm(@Valid @RequestBody Film film) {
+        log.info("Обновление информации по фильму: {}", film);
+        return filmService.updateFilm(film);
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Film findFilmById(@PathVariable int id) {
+        return filmService.findFilmById(id);
     }
 
 }
