@@ -17,15 +17,10 @@ import java.util.Set;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Film {
-<<<<<<< HEAD
-=======
-
->>>>>>> main
     int id;
     @NotBlank()
     @Size(max = 200)
     String name;
-<<<<<<< HEAD
     @NotNull
     String description;
     LocalDate releaseDate;
@@ -35,21 +30,4 @@ public class Film {
     RatingMpa mpa;
     List<Genre> genres;
     Set<Integer> likes;
-=======
-    @Positive
-    int duration;
-    @NotNull
-    String description;
-    LocalDate releaseDate;
-    private final Set<Integer> likes = new HashSet<>();
-
-    public void addLike(User user) {
-        likes.add(user.getId());
-    }
-
-    public void deleteLike(User user) {
-        likes.remove(user.getId());
-    }
-
->>>>>>> main
 }
