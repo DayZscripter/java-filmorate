@@ -3,18 +3,19 @@ package ru.yandex.practicum.filmorate.storage;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.List;
-import java.util.Set;
 
 public interface FilmStorage {
-    Film save(Film film);
-
-    Film findFilmById(int id);
-
     List<Film> getFilmList();
-
-    Set<Integer> getAllId();
 
     Film addFilm(Film film);
 
+    Film findFilmById(int id);
+
     void deleteAllFilms();
+
+    Film updateFilm(Film film);
+
+    //исправить замечание с 10го тз
+    boolean deleteById(int id);
+
 }

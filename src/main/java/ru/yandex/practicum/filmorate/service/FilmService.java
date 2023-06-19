@@ -1,22 +1,33 @@
 package ru.yandex.practicum.filmorate.service;
 
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.RatingMpa;
 
 import java.util.List;
 
 public interface FilmService {
+    Film createFilm(Film film);
 
-    Film addFilm(Film film); //добавление фильма
+    Film updateFilm(Film film);
 
-    Film updateFilm(Film film); //обновление фильма
+    List<Film> getAllFilms();
 
-    List<Film> getAllFilms(); //получение всех фильмов
+    void addLike(int userId, int filmId);
 
-    List<Film> getTopFilms(int count); //получаем топ 10 фильмов
+    void deleteLike(int userId, int filmId);
 
-    void addLike(int userId, int filmId); // добавление лайка
+    List<Film> getTopFilms(int count);
 
-    void deleteLike(int userId, int filmId); //убрать лайк
+    Film findFilmById(int id);
 
-    Film findFilmById(int id); //поиск фильма по айди
+    RatingMpa getMpa(int id);
+
+    List<RatingMpa> getMpaList();
+
+    List<Genre> getGenreList();
+
+    Genre getGenre(int id);
+
+    boolean deleteFilmById(int id);
 }

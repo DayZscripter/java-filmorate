@@ -1,23 +1,27 @@
 package ru.yandex.practicum.filmorate.service;
 
+import ru.yandex.practicum.filmorate.model.Friendship;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.List;
 
 public interface UserService {
-    User addUser(User user); //создаем пользователя
+    User createUser(User user);
 
-    User updateUser(User user); //запрос на обновление пользователя
+    User updateUser(User user);
 
-    List<User> getAllUsers(); //получение листа всех пользователей
+    List<User> getAllUsers();
 
-    List<User> getCommonFriends(int userId, int friendId); //список общих друзей пользователя
+    List<User> getCommonFriends(int user1Id, int user2Id);
 
-    List<User> getListOfFriends(int id); //лист друзей пользователя
+    Friendship addFriend(int userId, int friendId);
 
-    Integer addFriend(int userId, int friendId); //добавление в друзья
+    void deleteFriendById(int userId, int friendId);
 
-    void deleteFriendById(int userId, int friendId); //удаление из друзей по айди
+    List<User> getListOfFriends(int id);
 
-    User getUserById(int id); //получить пользователя с айди
+    User getUserById(int id);
+
+    boolean deleteUser(int id);
+
 }
